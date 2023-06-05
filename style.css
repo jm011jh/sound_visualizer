@@ -1,3 +1,8 @@
 *{margin: 0;padding: 0;box-sizing: border-box;}
 body{width: 100%;height: 100vh;}
 #webGl-container{width: 100%;height: 100%;position: absolute;}
+#ctrl{position: fixed;top: 0;right: 0;display: flex;flex-wrap: wrap;}
+#speed,
+#ctrlUp,
+#ctrlDown{width: 60px;height: 40px;background-color: #fff;border: 1px solid #000;display: flex;align-items: center;text-align: center;justify-content: center;cursor: pointer;width: 50%;}
+#speed{width: 100%;}

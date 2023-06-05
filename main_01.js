@@ -44,7 +44,6 @@ const uniforms_02 = {
   u_noise_amp_2: { value: 0.3 },
   u_spd_modifier_2: { value: 0.3 }
 };
-
 /**************************************************
  * 1. Initialize core threejs components
  *************************************************/
@@ -313,7 +312,7 @@ const app = {
     scene.fog = new THREE.Fog(0x0d1214, 1, 4)
     // Mesh
     const visualizerObj_01 = new THREE.Object3D()
-    const planeGeometry_01 = new THREE.PlaneGeometry(3, 10, 150, 1000);
+    const planeGeometry_01 = new THREE.PlaneGeometry(3, 10, 50, 2000);
     const material_purple_01 = new THREE.ShaderMaterial({
       uniforms: uniforms_01,
       vertexShader: this.vertexShader_01(),
@@ -354,71 +353,79 @@ const app = {
 
     uniforms_01.u_noise_amp_1.value = 0.4
     uniforms_01.u_noise_amp_2.value = 0.4
+    uniforms_01.u_spd_modifier_1.value = 0.5
+    uniforms_01.u_spd_modifier_2.value = 0.3
 
     uniforms_02.u_noise_amp_1.value = 0.4
     uniforms_02.u_noise_amp_2.value = 0.4
     uniforms_02.u_spd_modifier_1.value = 0.3
     uniforms_02.u_spd_modifier_2.value = 0.2
-    console.log(effWhite_02.material.uniforms)
     // set appropriate positioning
-    visualizerObj_01.position.set(-0.1, 0.5, -1)
+    visualizerObj_01.position.set(0, 0.5, -1)
     visualizerObj_01.rotation.x = Math.PI / 2
     visualizerObj_01.rotation.z = Math.PI / 1.9
     
-    visualizerObj_02.position.set(-0.5, 0.2, 0)
+    visualizerObj_02.position.set(0, 0.3, 0)
     visualizerObj_02.rotation.x = Math.PI / 2
     visualizerObj_02.rotation.z = Math.PI / 1.9
 
-    // GUI controls
-    // const gui = new dat.GUI();
+    const ctrlUp = document.getElementById('ctrlUp')
+    const ctrlDown = document.getElementById('ctrlDown')
 
-    // gui
-    //   .add(uniforms.u_pointsize, "value", 1.0, 10.0, 0.5)
-    //   .name("Point Size")
-    //   .onChange((val) => {
-    //     uniforms.u_pointsize.value = val;
-    //   });
+    var durationTime = 0.05
+    var changeVal = 1.0
+    var changeFreq = 1.3
+    // const uniforms_02 = {
+    //   u_pointsize: { value: 1.0 },
+    //   u_noise_freq_1: { value: 1.0 },
+    //   u_noise_amp_1: { value: 0.3 },
+    //   u_spd_modifier_1: { value: 0.5 },
+    //   u_noise_freq_2: { value: 1.0 },
+    //   u_noise_amp_2: { value: 0.3 },
+    //   u_spd_modifier_2: { value: 0.3 }
+    // };
+    ctrlUp.addEventListener('click', e => {
+      gsap.to(visualizerObj_01.position,{
+        y:0.5 + changeVal / 2,
+        duration: durationTime,
+      })
+      gsap.to(visualizerObj_02.position,{
+        y:0.3 + changeVal / 2,
+        duration: durationTime,
+      })
+      gsap.to(uniforms_01.u_noise_amp_1,{value : changeVal,duration : durationTime,})
+      gsap.to(uniforms_01.u_noise_amp_2,{value : changeVal,duration : durationTime,})
+      gsap.to(uniforms_02.u_noise_amp_1,{value : changeVal,duration : durationTime,})
+      gsap.to(uniforms_02.u_noise_amp_2,{value : changeVal,duration : durationTime,})
 
-    // let wave1 = gui.addFolder("Wave 1");
-    // wave1
-    //   .add(uniforms.u_noise_freq_1, "value", 0.1, 3, 0.1)
-    //   .name("Frequency")
-    //   .onChange((val) => {
-    //     uniforms.u_noise_freq_1.value = val;
-    //   });
-    // wave1
-    //   .add(uniforms.u_noise_amp_1, "value", 0.1, 3, 0.1)
-    //   .name("Amplitude")
-    //   .onChange((val) => {
-    //     uniforms.u_noise_amp_1.value = val;
-    //   });
-    // wave1
-    //   .add(uniforms.u_spd_modifier_1, "value", 0.01, 2.0, 0.01)
-    //   .name("Speed")
-    //   .onChange((val) => {
-    //     uniforms.u_spd_modifier_1.value = val;
-    //   });
+      gsap.to(uniforms_01.u_noise_freq_1,{value : changeFreq,duration : durationTime,})
+      gsap.to(uniforms_01.u_noise_freq_2,{value : changeFreq,duration : durationTime,})
+      gsap.to(uniforms_02.u_noise_freq_1,{value : changeFreq,duration : durationTime,})
+      gsap.to(uniforms_02.u_noise_freq_2,{value : changeFreq,duration : durationTime,})
+    })
+    ctrlDown.addEventListener('click', e => {
+      gsap.to(visualizerObj_01.position,{
+        y:0.5,
+        duration: durationTime,
+      })
+      gsap.to(visualizerObj_02.position,{
+        y:0.3,
+        duration: durationTime,
+      })
+      gsap.to(uniforms_01.u_noise_amp_1,{value : 0.3,duration : durationTime,})
+      gsap.to(uniforms_01.u_noise_amp_2,{value : 0.3,duration : durationTime,})
+      gsap.to(uniforms_02.u_noise_amp_1,{value : 0.3,duration : durationTime,})
+      gsap.to(uniforms_02.u_noise_amp_2,{value : 0.3,duration : durationTime,})
 
-    // let wave2 = gui.addFolder("Wave 2");
-    // wave2
-    //   .add(uniforms.u_noise_freq_2, "value", 0.1, 3, 0.1)
-    //   .name("Frequency")
-    //   .onChange((val) => {
-    //     uniforms.u_noise_freq_2.value = val;
-    //   });
-    // wave2
-    //   .add(uniforms.u_noise_amp_2, "value", 0.1, 3, 0.1)
-    //   .name("Amplitude")
-    //   .onChange((val) => {
-    //     uniforms.u_noise_amp_2.value = val;
-    //   });
-    // wave2
-    //   .add(uniforms.u_spd_modifier_2, "value", 0.01, 2.0, 0.01)
-    //   .name("Speed")
-    //   .onChange((val) => {
-    //     uniforms.u_spd_modifier_2.value = val;
-    //   });
-
+      gsap.to(uniforms_01.u_noise_freq_1,{value : 1.0,duration : durationTime,})
+      gsap.to(uniforms_01.u_noise_freq_2,{value : 1.0,duration : durationTime,})
+      gsap.to(uniforms_02.u_noise_freq_1,{value : 1.0,duration : durationTime,})
+      gsap.to(uniforms_02.u_noise_freq_2,{value : 1.0,duration : durationTime,})
+    })
+    const audio = new Audio('/audio/ordinary.mp3')
+    console.log(audio)
+    audio.play()
+    
     // Stats - show fps
     this.container = document.getElementById('webGl-container')
     this.stats1 = new Stats();

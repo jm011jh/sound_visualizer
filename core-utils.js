@@ -242,7 +242,7 @@ export const createComposer = (renderer, scene, camera) => {
   let composer = new EffectComposer(renderer);
   composer.addPass(renderScene);
   composer.addPass(bloomPass);
-  composer.addPass(blurPass);
+  // composer.addPass(blurPass);
   composer.addPass(outputPass);
 
   // custom passes that the consumer wants to add
