@@ -4,5 +4,8 @@ body{width: 100%;height: 100vh;}
 #ctrl{position: fixed;top: 0;right: 0;display: flex;flex-wrap: wrap;}
 #speed,
 #ctrlUp,
+#ctrlPlay,
 #ctrlDown{width: 60px;height: 40px;background-color: #fff;border: 1px solid #000;display: flex;align-items: center;text-align: center;justify-content: center;cursor: pointer;width: 50%;}
+#ctrlPlay{width: 100%;}
 #speed{width: 100%;}
+#ctrl.hide{display: none;}

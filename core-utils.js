@@ -77,19 +77,6 @@ export const runApp = (
     }
   });
 
-  // Register mouse move/touch listener
-  const mouseListener = (e) => {
-    uniforms.u_mouse.value.x = e.touches ? e.touches[0].clientX : e.clientX;
-    uniforms.u_mouse.value.y = e.touches ? e.touches[0].clientY : e.clientY;
-    uniforms02.u_mouse.value.x = e.touches ? e.touches[0].clientX : e.clientX;
-    uniforms02.u_mouse.value.y = e.touches ? e.touches[0].clientY : e.clientY;
-  };
-  if ("ontouchstart" in window) {
-    window.addEventListener("touchmove", mouseListener);
-  } else {
-    window.addEventListener("mousemove", mouseListener);
-  }
-
   // Define your app
   if (app.updateScene === undefined) {
     app.updateScene = (delta, elapsed) => {};
@@ -119,23 +106,7 @@ export const runApp = (
 
   };
 
-  app
-    .initScene()
-    .then(() => {
-      const veil = document.getElementById("veil");
-      veil.style.opacity = 0;
-      return true;
-    })
-    .then(animate)
-    .then(() => {
-      // debugging info
-      renderer.info.reset();
-      // not sure if reliable enough, numbers change everytime...
-      // console.log("Renderer info", renderer.info);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  app.initScene().then(animate)
 };
 
 /**
@@ -150,6 +121,8 @@ export const createRenderer = (
   configureRenderer = (renderer) => {}
 ) => {
   const renderer = new THREE.WebGLRenderer(rendererProps);
+  renderer.gammaOutput = true;
+  renderer.gammaFactor = 2.2
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -170,8 +143,8 @@ export const createRenderer = (
 export const createComposer = (renderer, scene, camera) => {
   const renderScene = new RenderPass(scene, camera);
   const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
-  bloomPass.threshold = 0.12;
-  bloomPass.strength = 0.8;
+  bloomPass.threshold = 0.08;
+  bloomPass.strength = 0.9;
   bloomPass.radius = 0.1;
 
   const outputPass = new OutputPass( THREE.ReinhardToneMapping );

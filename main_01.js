@@ -6,7 +6,6 @@ import * as dat from "dat.gui";
 import Stats from "three/examples/jsm/libs/stats.module";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// Core boilerplate code deps
 import {
   createCamera,
   createRenderer,
@@ -14,9 +13,6 @@ import {
   getDefaultUniforms,
   createComposer
 } from "./core-utils";
-
-// global.THREE = THREE;
-
 /**************************************************
  * 0. Tweakable parameters for the scene
  *************************************************/
@@ -24,24 +20,24 @@ const uniforms_01 = {
   ...getDefaultUniforms(),
   u_pointsize: { value: 1.0 },
   // wave 1
-  u_noise_freq_1: { value: 1.0 },
-  u_noise_amp_1: { value: 0.3 },
-  u_spd_modifier_1: { value: 0.5 },
+  u_noise_freq_1: { value: 0.5 },
+  u_noise_amp_1: { value: 0.2 },
+  u_spd_modifier_1: { value: 0.3 },
   // wave 2
-  u_noise_freq_2: { value: 1.0 },
-  u_noise_amp_2: { value: 0.3 },
-  u_spd_modifier_2: { value: 0.3 }
+  u_noise_freq_2: { value: 0.5 },
+  u_noise_amp_2: { value: 0.15 },
+  u_spd_modifier_2: { value: 0.2 }
 };
 const uniforms_02 = {
   ...getDefaultUniforms(),
   u_pointsize: { value: 1.0 },
   // wave 1
   u_noise_freq_1: { value: 1.0 },
-  u_noise_amp_1: { value: 0.3 },
+  u_noise_amp_1: { value: 0.2 },
   u_spd_modifier_1: { value: 0.5 },
   // wave 2
   u_noise_freq_2: { value: 1.0 },
-  u_noise_amp_2: { value: 0.3 },
+  u_noise_amp_2: { value: 0.2 },
   u_spd_modifier_2: { value: 0.3 }
 };
 /**************************************************
@@ -49,22 +45,8 @@ const uniforms_02 = {
  *************************************************/
 // Create the scene
 const scene = new THREE.Scene();
-
-// Create the renderer via 'createRenderer',
-// 1st param receives additional WebGLRenderer properties
-// 2nd param receives a custom callback to further configure the renderer
 const renderer = createRenderer({ antialias: true });
-
-// Create the camera
-// Pass in fov, near, far and camera position respectively
 const camera = createCamera(60, 1, 10,{x: 0.1, y: 0.1, z: 2});
-
-// Create Light
-const ambientLight = new THREE.AmbientLight(0xffffff, 10); 
-const pointLight = new THREE.PointLight(0xff0000, 10);
-pointLight.position.set(2, 2, 2);
-scene.add(ambientLight)
-scene.add(pointLight);
 
 //Create Composer
 const composer = createComposer(renderer,scene, camera)
@@ -247,7 +229,8 @@ const app = {
       float alphaPosition = 0.04;
       float alpha = 0.0;
       if(st.x < 0.5) alpha = st.x * alphaPosition - 0.01;
-      if(st.x >= 0.5) alpha = alphaPosition - (st.x * alphaPosition) - 0.01;
+      // if(st.x >= 0.5) alpha = alphaPosition - (st.x * alphaPosition) - 0.01;
+      if(st.x >= 0.5) alpha = ((1.0 - st.x) * alphaPosition) - 0.01;
       if(alpha < 0.0) alpha = 0.0;
       gl_FragColor = vec4( vec3(1, 1, 1), alpha);
 
@@ -310,9 +293,10 @@ const app = {
     // Environment
     scene.background = new THREE.Color("#0d1214");
     scene.fog = new THREE.Fog(0x0d1214, 1, 4)
+    
     // Mesh
     const visualizerObj_01 = new THREE.Object3D()
-    const planeGeometry_01 = new THREE.PlaneGeometry(3, 10, 50, 2000);
+    const planeGeometry_01 = new THREE.PlaneGeometry(3, 10, 70, 4000);
     const material_purple_01 = new THREE.ShaderMaterial({
       uniforms: uniforms_01,
       vertexShader: this.vertexShader_01(),
@@ -345,94 +329,94 @@ const app = {
     const effPurple_02 = new THREE.Points(planeGeometry_02, material_purple_02);
     const effWhite_02 = new THREE.Points(planeGeometry_02, material_white_02);
 
-    
     visualizerObj_01.add(effPurple_01, effWhite_01)
     visualizerObj_02.add(effPurple_02, effWhite_02)
     scene.add(visualizerObj_01);
     scene.add(visualizerObj_02);
 
-    uniforms_01.u_noise_amp_1.value = 0.4
-    uniforms_01.u_noise_amp_2.value = 0.4
-    uniforms_01.u_spd_modifier_1.value = 0.5
+    uniforms_01.u_noise_amp_1.value = 0.2 
+    uniforms_01.u_noise_amp_2.value = 0.2
+    uniforms_01.u_noise_freq_1.value = 0.3
+    uniforms_01.u_noise_freq_2.value = 0.3
+    uniforms_01.u_spd_modifier_1.value = 0.4
     uniforms_01.u_spd_modifier_2.value = 0.3
 
-    uniforms_02.u_noise_amp_1.value = 0.4
-    uniforms_02.u_noise_amp_2.value = 0.4
-    uniforms_02.u_spd_modifier_1.value = 0.3
-    uniforms_02.u_spd_modifier_2.value = 0.2
-    // set appropriate positioning
-    visualizerObj_01.position.set(0, 0.5, -1)
+    uniforms_02.u_noise_amp_1.value = 0.2 
+    uniforms_02.u_noise_amp_2.value = 0.2
+    uniforms_02.u_noise_freq_1.value = 0.5
+    uniforms_02.u_noise_freq_2.value = 0.5
+    uniforms_02.u_spd_modifier_1.value = 0.5
+    uniforms_02.u_spd_modifier_2.value = 0.3
+
+    visualizerObj_01.position.set(0, 0, -1)
     visualizerObj_01.rotation.x = Math.PI / 2
     visualizerObj_01.rotation.z = Math.PI / 1.9
     
-    visualizerObj_02.position.set(0, 0.3, 0)
+    visualizerObj_02.position.set(0, 0, 0)
     visualizerObj_02.rotation.x = Math.PI / 2
     visualizerObj_02.rotation.z = Math.PI / 1.9
 
-    const ctrlUp = document.getElementById('ctrlUp')
-    const ctrlDown = document.getElementById('ctrlDown')
+    // Set audio
+    var durationTime = 1
+    var changeAmpVal = 0.1
+    var changeAmpVal2 = 0.1
+    var changeFreqVal = 0.1
+    var changeFreqVal2 = 0.5
+    const ctrlPlay = document.getElementById('ctrlPlay');
+    var analyser
+    var data
+    var gainNow
+    ctrlPlay.addEventListener('click', e => {
+      document.getElementById('ctrl').classList.add('hide')
+      const audio = new Audio('/audio/short.m4a');
+      console.log(audio)
+      const audioCtx = new AudioContext();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 128;
+      const source = audioCtx.createMediaElementSource(audio)
+      source.connect(analyser)
+      source.connect(audioCtx.destination)
+      data = new Uint8Array(12)
+      audio.play();
+      loopingFunction(data);
+    })
+    function loopingFunction(){
+      requestAnimationFrame(loopingFunction);
+      data = new Uint8Array(12)
+      analyser.getByteFrequencyData(data);
+      gainNow = (data.reduce((sum, cur) => sum + cur) / 1000).toFixed(1)
+      console.log(gainNow)
+      if(gainNow > 2.5) gainNow = 2.5
+      if(gainNow < 0.3) gainNow = 0.0
 
-    var durationTime = 0.05
-    var changeVal = 1.0
-    var changeFreq = 1.3
-    // const uniforms_02 = {
-    //   u_pointsize: { value: 1.0 },
-    //   u_noise_freq_1: { value: 1.0 },
-    //   u_noise_amp_1: { value: 0.3 },
-    //   u_spd_modifier_1: { value: 0.5 },
-    //   u_noise_freq_2: { value: 1.0 },
-    //   u_noise_amp_2: { value: 0.3 },
-    //   u_spd_modifier_2: { value: 0.3 }
-    // };
-    ctrlUp.addEventListener('click', e => {
+      changeAmpVal = gainNow / 10 + 0.4
+      changeAmpVal2 = gainNow / 10 + 0.15
+      changeFreqVal = gainNow / 2.5 + 0.3
+      changeFreqVal2 = gainNow / 50 + 0.5
       gsap.to(visualizerObj_01.position,{
-        y:0.5 + changeVal / 2,
+        y:0 + changeAmpVal*1.15 - 0.15,
         duration: durationTime,
       })
       gsap.to(visualizerObj_02.position,{
-        y:0.3 + changeVal / 2,
+        y:0 + changeAmpVal / 10,
         duration: durationTime,
       })
-      gsap.to(uniforms_01.u_noise_amp_1,{value : changeVal,duration : durationTime,})
-      gsap.to(uniforms_01.u_noise_amp_2,{value : changeVal,duration : durationTime,})
-      gsap.to(uniforms_02.u_noise_amp_1,{value : changeVal,duration : durationTime,})
-      gsap.to(uniforms_02.u_noise_amp_2,{value : changeVal,duration : durationTime,})
-
-      gsap.to(uniforms_01.u_noise_freq_1,{value : changeFreq,duration : durationTime,})
-      gsap.to(uniforms_01.u_noise_freq_2,{value : changeFreq,duration : durationTime,})
-      gsap.to(uniforms_02.u_noise_freq_1,{value : changeFreq,duration : durationTime,})
-      gsap.to(uniforms_02.u_noise_freq_2,{value : changeFreq,duration : durationTime,})
-    })
-    ctrlDown.addEventListener('click', e => {
-      gsap.to(visualizerObj_01.position,{
-        y:0.5,
-        duration: durationTime,
-      })
-      gsap.to(visualizerObj_02.position,{
-        y:0.3,
-        duration: durationTime,
-      })
-      gsap.to(uniforms_01.u_noise_amp_1,{value : 0.3,duration : durationTime,})
-      gsap.to(uniforms_01.u_noise_amp_2,{value : 0.3,duration : durationTime,})
-      gsap.to(uniforms_02.u_noise_amp_1,{value : 0.3,duration : durationTime,})
-      gsap.to(uniforms_02.u_noise_amp_2,{value : 0.3,duration : durationTime,})
-
-      gsap.to(uniforms_01.u_noise_freq_1,{value : 1.0,duration : durationTime,})
-      gsap.to(uniforms_01.u_noise_freq_2,{value : 1.0,duration : durationTime,})
-      gsap.to(uniforms_02.u_noise_freq_1,{value : 1.0,duration : durationTime,})
-      gsap.to(uniforms_02.u_noise_freq_2,{value : 1.0,duration : durationTime,})
-    })
-    const audio = new Audio('/audio/ordinary.mp3')
-    console.log(audio)
-    audio.play()
-    
+      gsap.to(uniforms_01.u_noise_amp_1,{value : changeAmpVal,duration : durationTime,})
+      gsap.to(uniforms_01.u_noise_amp_2,{value : changeAmpVal,duration : durationTime,})
+      gsap.to(uniforms_02.u_noise_amp_1,{value : changeAmpVal2,duration : durationTime,})
+      gsap.to(uniforms_02.u_noise_amp_2,{value : changeAmpVal2,duration : durationTime,})
+  
+      gsap.to(uniforms_01.u_noise_freq_1,{value : changeFreqVal,duration : durationTime,})
+      gsap.to(uniforms_01.u_noise_freq_2,{value : changeFreqVal,duration : durationTime,})
+      gsap.to(uniforms_02.u_noise_freq_1,{value : changeFreqVal2,duration : durationTime,})
+      gsap.to(uniforms_02.u_noise_freq_2,{value : changeFreqVal2,duration : durationTime,})
+    }
     // Stats - show fps
     this.container = document.getElementById('webGl-container')
     this.stats1 = new Stats();
     this.stats1.showPanel(0); // Panel 0 = fps
     this.stats1.domElement.style.cssText =
       "position:absolute;top:0px;left:0px;";
-    // this.container is the parent DOM element of the threejs canvas element
     this.container.appendChild(this.stats1.domElement);
   },
   // @param {number} interval - time elapsed between 2 frames
@@ -452,12 +436,3 @@ const app = {
  * ps. if you don't use post-processing, pass undefined to the 'composer'(last) param
  *************************************************/
 runApp(app, scene, renderer, camera, true, uniforms_01, uniforms_02, composer);
-
-// navigator.mediaDevices.getUserMedia({
-//   audio:{
-//     sampleRate: 16000,
-//   },
-// })
-// .then((stream) => {
-//   console.log(stream)
-// })
